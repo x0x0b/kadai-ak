@@ -8,7 +8,7 @@ class MenuSpec extends Specification {
     // 正常系テスト
     def "納豆ご飯"() {
         given:
-        def iName = "item"
+        def iName = "納豆ご飯"
         def foodItems = []
         foodItems.add(new FoodItem("白米", new BigDecimal("2.5"), new BigDecimal("0.3"), new BigDecimal("37.1")))
         foodItems.add(new FoodItem("納豆", new BigDecimal("16.5"), new BigDecimal("10.0"), new BigDecimal("12.1")))
@@ -26,7 +26,7 @@ class MenuSpec extends Specification {
 
     def "空メニュー"() {
         given:
-        def iName = "item"
+        def iName = "空メニュー"
         def foodItems = []
 
         when:
