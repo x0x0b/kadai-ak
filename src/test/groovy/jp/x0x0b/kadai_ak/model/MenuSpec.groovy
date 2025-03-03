@@ -23,4 +23,17 @@ class MenuSpec extends Specification {
         // 合計365Kcal
         menu.getKiloCalorie() == 365L
     }
+
+    def "空メニュー"() {
+        given:
+        def iName = "item"
+        def foodItems = []
+
+        when:
+        def menu = Menu.builder().name(iName).foodItems(foodItems).build()
+
+        then:
+        menu.getName() == iName
+        menu.getKiloCalorie() == 0L
+    }
 }
