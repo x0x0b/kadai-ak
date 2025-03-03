@@ -18,6 +18,9 @@ public class FoodItem {
   private final BigDecimal proteinGramIntake; // たんぱく質(g)
   private final BigDecimal fatGramIntake; // 脂質(g)
   private final BigDecimal carbohydrateGramIntake; // 炭水化物(g)
+  private final long proteinKiloCalorie;
+  private final long fatKiloCalorie;
+  private final long carbohydrateKiloCalorie;
 
   // 1gあたりのカロリー
   private static final BigDecimal PROTEIN_KILO_CALORIE_PER_GRAM = new BigDecimal("4.0");
@@ -35,6 +38,10 @@ public class FoodItem {
     this.proteinGramIntake = roundingGramIntake(proteinGramIntake);
     this.fatGramIntake = roundingGramIntake(fatGramIntake);
     this.carbohydrateGramIntake = roundingGramIntake(carbohydrateGramIntake);
+    // 1gあたりのカロリーと摂取量からカロリーを計算する（丸めたあとのPFC摂取量を使用する）
+    this.proteinKiloCalorie = getKiloCalorie(this.proteinGramIntake, PROTEIN_KILO_CALORIE_PER_GRAM);
+    this.fatKiloCalorie = getKiloCalorie(this.fatGramIntake, FAT_KILO_CALORIE_PER_GRAM);
+    this.carbohydrateKiloCalorie = getKiloCalorie(this.carbohydrateGramIntake, CARBOHYDRATE_KILO_CALORIE_PER_GRAM);
     log.debug("MenuItem created: {}", this);
   }
 
@@ -55,17 +62,5 @@ public class FoodItem {
    */
   private long getKiloCalorie(BigDecimal gramIntake, BigDecimal kiloCaloriePerGram) {
     return gramIntake.multiply(kiloCaloriePerGram).setScale(KILO_CALORIE_DECIMAL_PLACE, RoundingMode.HALF_UP).longValue();
-  }
-
-  public long getProteinKiloCalorie() {
-    return getKiloCalorie(proteinGramIntake, PROTEIN_KILO_CALORIE_PER_GRAM);
-  }
-
-  public long getFatKiloCalorie() {
-    return getKiloCalorie(fatGramIntake, FAT_KILO_CALORIE_PER_GRAM);
-  }
-
-  public long getCarbohydrateKiloCalorie() {
-    return getKiloCalorie(carbohydrateGramIntake, CARBOHYDRATE_KILO_CALORIE_PER_GRAM);
   }
 }
