@@ -1,0 +1,3 @@
+[tools]
+java = "adoptopenjdk-21"
+maven = "latest"
