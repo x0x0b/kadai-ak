@@ -1,5 +1,6 @@
 package jp.x0x0b.kadai_ak.model;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import lombok.Getter;
@@ -35,13 +36,13 @@ public class FoodItem {
     this.name = name;
     // 今回は摂取量を丸めた値を保持する
     // 要件によってはそのまま保持して、get時に丸めることも考えられる
-    this.proteinGramIntake = roundingGramIntake(proteinGramIntake);
-    this.fatGramIntake = roundingGramIntake(fatGramIntake);
-    this.carbohydrateGramIntake = roundingGramIntake(carbohydrateGramIntake);
+    this.proteinGramIntake = roundGramIntake(proteinGramIntake);
+    this.fatGramIntake = roundGramIntake(fatGramIntake);
+    this.carbohydrateGramIntake = roundGramIntake(carbohydrateGramIntake);
     // 1gあたりのカロリーと摂取量からカロリーを計算する（丸めたあとのPFC摂取量を使用する）
-    this.proteinKiloCalorie = getKiloCalorie(this.proteinGramIntake, PROTEIN_KILO_CALORIE_PER_GRAM);
-    this.fatKiloCalorie = getKiloCalorie(this.fatGramIntake, FAT_KILO_CALORIE_PER_GRAM);
-    this.carbohydrateKiloCalorie = getKiloCalorie(this.carbohydrateGramIntake, CARBOHYDRATE_KILO_CALORIE_PER_GRAM);
+    this.proteinKiloCalorie = calculateKiloCalorie(this.proteinGramIntake, PROTEIN_KILO_CALORIE_PER_GRAM);
+    this.fatKiloCalorie = calculateKiloCalorie(this.fatGramIntake, FAT_KILO_CALORIE_PER_GRAM);
+    this.carbohydrateKiloCalorie = calculateKiloCalorie(this.carbohydrateGramIntake, CARBOHYDRATE_KILO_CALORIE_PER_GRAM);
     log.debug("MenuItem created: {}", this);
   }
 
@@ -50,7 +51,8 @@ public class FoodItem {
    * @param value 摂取量
    * @return 丸めた摂取量
    */
-  private BigDecimal roundingGramIntake(BigDecimal value) {
+  @VisibleForTesting
+  BigDecimal roundGramIntake(BigDecimal value) {
     return value.setScale(INTAKE_GRAM_DECIMAL_PLACE, RoundingMode.HALF_UP);
   }
 
@@ -60,7 +62,8 @@ public class FoodItem {
    * @param kiloCaloriePerGram 1gあたりのカロリー
    * @return カロリー
    */
-  private long getKiloCalorie(BigDecimal gramIntake, BigDecimal kiloCaloriePerGram) {
+  @VisibleForTesting
+  long calculateKiloCalorie(BigDecimal gramIntake, BigDecimal kiloCaloriePerGram) {
     return gramIntake.multiply(kiloCaloriePerGram).setScale(KILO_CALORIE_DECIMAL_PLACE, RoundingMode.HALF_UP).longValue();
   }
 }

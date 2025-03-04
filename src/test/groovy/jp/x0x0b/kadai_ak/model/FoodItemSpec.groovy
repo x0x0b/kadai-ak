@@ -1,6 +1,5 @@
 package jp.x0x0b.kadai_ak.model
 
-
 import spock.lang.Specification
 
 class FoodItemSpec extends Specification {
@@ -38,7 +37,66 @@ class FoodItemSpec extends Specification {
         "文字列入力" | "item" | "invalid" | "0.3" | "37.1"        || NumberFormatException
     }
 
-    // カロリー計算のテスト
+    def "摂取量が小数点第二位で四捨五入される"() {
+        given:
+        def foodItem = new FoodItem("item", new BigDecimal("1.0"), new BigDecimal("1.0"), new BigDecimal("1.0"))
+
+        when:
+        def result = foodItem.roundGramIntake(new BigDecimal(iValue))
+
+        then:
+        result == new BigDecimal(eValue)
+
+        where:
+        iValue | eValue
+        "1.00" | "1.0"
+        "1.01" | "1.0"
+        "1.02" | "1.0"
+        "1.03" | "1.0"
+        "1.04" | "1.0"
+        "1.05" | "1.1"
+        "1.06" | "1.1"
+        "1.07" | "1.1"
+        "1.08" | "1.1"
+        "1.09" | "1.1"
+        "1.10" | "1.1"
+    }
+
+    def "カロリー計算が小数点第一位で四捨五入される"() {
+        given:
+        def foodItem = new FoodItem("item", new BigDecimal("1.0"), new BigDecimal("1.0"), new BigDecimal("1.0"))
+
+        when:
+        def result = foodItem.calculateKiloCalorie(new BigDecimal(iGram), new BigDecimal(iKiloCalorie))
+
+        then:
+        result == eValue
+
+        where:
+        iGram | iKiloCalorie | eValue
+        // 1.9 * 1 = 1.9 -> 2
+        "1.9" | "1"          | 2
+        // 1.9 * 2 = 3.8 -> 4
+        "1.9" | "2"          | 4
+        // 1.9 * 3 = 5.7 -> 6
+        "1.9" | "3"          | 6
+        // 1.9 * 4 = 7.6 -> 8
+        "1.9" | "4"          | 8
+        // 1.9 * 5 = 9.5 -> 10
+        "1.9" | "5"          | 10
+        // 1.9 * 6 = 11.4 -> 11
+        "1.9" | "6"          | 11
+        // 1.9 * 7 = 13.3 -> 13
+        "1.9" | "7"          | 13
+        // 1.9 * 8 = 15.2 -> 15
+        "1.9" | "8"          | 15
+        // 1.9 * 9 = 17.1 -> 17
+        "1.9" | "9"          | 17
+        // 1.9 * 10 = 19.0 -> 19
+        "1.9" | "10"         | 19
+    }
+
+    // コンストラクタによるカロリー計算のテスト
     def "カロリー計算 - #testName"() {
         when:
         def foodItem = new FoodItem(iName, new BigDecimal(iProtain), new BigDecimal(iFat), new BigDecimal(iCarbohydrate))

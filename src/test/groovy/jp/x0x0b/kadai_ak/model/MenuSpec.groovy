@@ -6,7 +6,7 @@ import spock.lang.Specification
 class MenuSpec extends Specification {
 
     // 正常系テスト
-    def "納豆ご飯"() {
+    def "メニューの総カロリーを計算する"() {
         given:
         def iName = "納豆ご飯"
         def foodItems = []
